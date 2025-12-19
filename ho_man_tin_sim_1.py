@@ -23,10 +23,10 @@ rarity = {
 chances = [1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,4,4,5]
 
 class labubu:
-    def __init__(self, name, efficiency, age, gender):
-        self.name = name
-        self.efficiency = efficiency
-        self.age = age
+    def __init__(self, __name, __efficiency, __age, __gender):
+        self.name = __name
+        self.efficiency = __efficiency
+        self.age = __age
     
     def kill(self):
         print(f'{self.name} has been killed!')
@@ -98,10 +98,51 @@ You will have tools to help you gain load, but you have to buy them!
 Good luck!
         '''
         )
+    print("Press anything to return to homepage.")
+    input()
+    home()
 
 def exitgame():
-    home()
+    print("Thank you for playing;.")
+    exit()
 
 def home():
     clear()
-    print
+    print(bold("This is the home page"))
+    print('''
+Welcome to Ho Man Tin simulator.
+-----------------------------------------------------------------------------
+Press 0 to quit game
+Press 1 to learn the rules
+Press 2 to start the game
+-----------------------------------------------------------------------------         
+        '''
+        )
+    user = input()
+    while type(user) == str:
+        try:
+            user = int(user)
+            while user > 2 or user < 0:
+                user = input("Number out of range, input again:")
+        except ValueError:
+            user = input("Wrong data type, input again:")
+    if user == 0:
+        exitgame()
+    elif user == 1:
+        rules()
+    elif user == 2:
+        startmain()
+
+#main part
+print(bold("The Ho Man Tin simulator"))
+print('''
+This is a game where you can fullfil your fantasy of being Ho Man Tin.
+You can collect labubus, controll them, make them work.
+Must importantly, make them make load.
+You won't get much load... Will you?
+        '''
+        )
+print("Press anything to continue.")
+input()
+home()
+
