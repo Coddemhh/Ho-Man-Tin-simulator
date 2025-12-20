@@ -22,6 +22,11 @@ rarity = {
 
 chances = [1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,4,4,5]
 
+Player = {
+    "name":'',
+    "money": 20
+}
+
 class Labubu:
     def __init__(self, name, efficiency, age, gender):
         self.name = name
@@ -67,8 +72,8 @@ def quickOpen():
     print("You have gotten a labubu with the",b,"rarity!")
     return b
 
-
 def rolling():
+    clear()
     show = ['','','','','','','','','']
     for i in range(len(show)):
         a = random.randint(0,len(chances)-1)
@@ -77,10 +82,10 @@ def rolling():
             show[i] = rarity[b]
     print("Rolling for your labubu......")
     print('                ↓')
-    for i in range(50):
+    for i in range(40):
         c_show = [f"\033[{colors[char]}m{char}\033[0m" if char in colors else char for char in show]
         print('   '.join(c_show), end='\r')
-        time.sleep(i/70)
+        time.sleep(math.log(i+1)/10)
         show = show[-1:] + show[:-1]
         a = random.randint(0,len(chances)-1)
         b = chances[a]
@@ -128,6 +133,7 @@ Welcome to Ho Man Tin simulator.
 Press 0 to quit game
 Press 1 to learn the rules
 Press 2 to start the game
+Press 3 to experience infinite gambling, infinite joy
 -----------------------------------------------------------------------------         
         '''
         )
@@ -135,7 +141,7 @@ Press 2 to start the game
     while type(user) == str:
         try:
             user = int(user)
-            while user > 2 or user < 0:
+            while user > 3 or user < 0:
                 user = input("Number out of range, input again:")
         except ValueError:
             user = input("Wrong data type, input again:")
@@ -144,10 +150,15 @@ Press 2 to start the game
     elif user == 1:
         rules()
     elif user == 2:
-        startmain()
+        startMain()
+    elif user == 3:
+        while True:
+            rolling()
+            input("Press anything to continue:")
 
 #main part
-print("Welcome to Ho Man Tin simulator")
+clear()
+print(bold("Welcome to Ho Man Tin simulator"))
 print('''
 This is a game where you can fullfil your fantasy of being Ho Man Tin.
 You can collect labubus, controll them, make them work.
@@ -157,5 +168,12 @@ You won't get much load... Will you?
         )
 print("Press anything to continue.")
 input()
-home()
+clear()
+Player["name"] = input("What is your name?")
+print("Welcome,",Player["name"]+"!")
+print("Press anything to continue.")
+input()
+while True:
+    home()
+
 
