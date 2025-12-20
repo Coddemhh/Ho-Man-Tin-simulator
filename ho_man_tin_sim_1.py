@@ -55,7 +55,7 @@ class labubu:
             print(f'{self.name} and {second_labubu} have given head!')
 
     def sextransfer(self):
-        self.gender = "M" if self.gender == "F" else self.gender = "F"     
+        self.gender := "M" if self.gender == "F" else self.gender := "F"     
 
 def rolling():
     show = ['','','','','','','','','']
