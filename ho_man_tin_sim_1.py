@@ -4,6 +4,13 @@ import random
 import math
 import os 
 
+tools_owned = {
+    "booster":0,
+    "horny_potion":0,
+    "combine_potion":0,
+    "sexchange_potion":0
+}
+
 colors = {
     "C": 39, #default
     "U": 32, #green
@@ -24,7 +31,8 @@ chances = [1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,4,4,5]
 
 Player = {
     "name":'',
-    "money": 20
+    "money": 20,
+    "level":0
 }
 
 class Labubu:
@@ -113,15 +121,18 @@ The labubus can generate a currency called:
     print(bold("load"))
     print('''
 You will have tools to help you gain load, but you have to buy them!
+By using load, you can buy weapons and aromor to increase your power.
+There are multiple levels to this game and each level has its own boss.
+Once you reach level 3, you beat the game!
 Good luck!
         '''
         )
-    print("Press anything to return to homepage.")
+    print("Press anything to return to the homepage:")
     input()
     home()
 
 def exitGame():
-    print("Thank you for playing;.")
+    print("Thank you for playing.")
     exit()
 
 def home():
@@ -130,10 +141,11 @@ def home():
     print('''
 Welcome to Ho Man Tin simulator.
 -----------------------------------------------------------------------------
-Press 0 to quit game
-Press 1 to learn the rules
-Press 2 to start the game
-Press 3 to experience infinite gambling, infinite joy
+Press 0 to quit the game
+Press 1 to start the game
+Press 2 to learn the rules
+Press 3 to learn the plot
+Press 4 to experience infinite gambling, infinite joy
 -----------------------------------------------------------------------------         
         '''
         )
@@ -141,20 +153,49 @@ Press 3 to experience infinite gambling, infinite joy
     while type(user) == str:
         try:
             user = int(user)
-            while user > 3 or user < 0:
+            while user > 4 or user < 0:
                 user = input("Number out of range, input again:")
         except ValueError:
             user = input("Wrong data type, input again:")
     if user == 0:
         exitGame()
     elif user == 1:
-        rules()
-    elif user == 2:
         startMain()
+    elif user == 2:
+        rules()
     elif user == 3:
+        plot()
+    elif user == 4:
         while True:
             rolling()
-            input("Press anything to continue:")
+            user = input("Press anything to continue(type quit to go back to homepage):")
+            user = user.lower()
+            if user == "quit":
+                home()
+
+def plot():
+    clear()
+    print('''
+You are the one and only Ho Man Tin.
+In the year 2050, the world as we know it has vanished due to the devastating nuclear war.
+You, as the one of the lucky survivors of the war has discovered a special animal called:
+        ''')
+    print(bold("Labubu"))
+    print('''
+You discovered that they can produce a liquid called load.
+You decided to make use of that and go on a journey of conquering the world...
+        '''
+        )
+    print("Press anything to return to the homepage:")
+    input()
+    home()
+
+def buyToolsPage():
+    clear()
+    print(bold("Tools Market"),end = '')
+    print("---------------------------------------------------------")
+    print("Here you can buy tools to help you collect more loads.")
+    print("Press the corresponding keys to buy the tools.")
 
 #main part
 clear()
@@ -162,7 +203,7 @@ print(bold("Welcome to Ho Man Tin simulator"))
 print('''
 This is a game where you can fullfil your fantasy of being Ho Man Tin.
 You can collect labubus, controll them, make them work.
-Must importantly, make them make load.
+Must importantly, use the load, buy weapons and conquer the world.
 You won't get much load... Will you?
         '''
         )
@@ -170,6 +211,8 @@ print("Press anything to continue.")
 input()
 clear()
 Player["name"] = input("What is your name?")
+while Player["name"] == '':
+    Player["name"] = input("Username cannot be empty. What is your name?")
 print("Welcome,",Player["name"]+"!")
 print("Press anything to continue.")
 input()
