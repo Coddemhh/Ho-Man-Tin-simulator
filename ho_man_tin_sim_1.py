@@ -8,7 +8,8 @@ tools_owned = {
     "booster":0,
     "horny_potion":0,
     "combine_potion":0,
-    "sexchange_potion":0
+    "sexchange_potion":0,
+    "totem_of_undying":0
 }
 
 colors = {
@@ -32,7 +33,20 @@ chances = [1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,4,4,5]
 Player = {
     "name":'',
     "money": 20,
-    "level":0
+    "level":0,
+    "time_played":0,
+    "Labubu_slot":10,
+    "Labubu_owned":0,
+    "helmet_equiped":"",
+    "chestplate_equiped":"",
+    "pants_equiped":"",
+    "shoes_equiped":"",
+    "sword_equiped":"",
+    "long_range_equiped":"",
+    "attack_stat":0,
+    "defence_stat":0,
+    "load_efficiency_in_sec":0,
+    "lives": 1   #you only live once!
 }
 
 class Labubu:
@@ -62,8 +76,8 @@ class Labubu:
 
     def combine(self, second_labubu):
         self.efficiency = (self.efficiency + second_labubu.efficiency) * 1.5
-        self.age = (self.age + second_labubu.age) / 2 
-        print(f'{self.name} and {second_labubu.name} have combined!')
+        self.age = (self.age + second_labubu.age) / 2                           #with a second thought i wont be using this,
+        print(f'{self.name} and {second_labubu.name} have combined!')           #i still kept it anyway                 
         del second_labubu
     
     def giveHead(self, second_labubu):
@@ -74,9 +88,10 @@ class Labubu:
         else:
             if self.gender == "M":
                 self.efficiency += 50 
+                print(f"{second_labubu.name} has given {self.name} head!") 
             else:
                 second_labubu.efficiency += 50
-            print(f'{self.name} and {second_labubu} have given head!')
+                print(f"{self.name} has given {second_labubu.name} head!")      #well they cant both give each other head can they?
             return 1
 
     def sexTransfer(self):
@@ -118,20 +133,20 @@ def rolling():
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def flashingText(text,delay_in_sec,times_flashed):
+def flashingText(text : str,delay_in_sec : float,times_flashed : int):
     for i in range(times_flashed):
         print(text)
         time.sleep(delay_in_sec)
         clear()
         time.sleep(delay_in_sec)
 
-def printStepByStep(text,delay_in_sec,stop_time_in_sec):
+def printStepByStep(text : str,delay_in_sec : float,stop_time_in_sec : float):
     for i in range(len(text)):
         print(text[i],end = '',flush = True)
         time.sleep(delay_in_sec)
     time.sleep(stop_time_in_sec)
 
-def bold(text):
+def bold(text : str):
     return f"\033[1m{text}\033[0m"
 
 def rules():
@@ -148,7 +163,7 @@ The labubus can generate a currency called:
 You will have tools to help you gain load, but you have to buy them!
 By using load, you can buy weapons and aromor to increase your power.
 There are multiple levels to this game and each level has its own boss.
-Once you reach level 3, you beat the game!
+Once you reach level 5, you beat the game!
 Good luck!
         '''
         )
@@ -161,6 +176,8 @@ def exitGame():
     exit()
 
 def home():
+    global start_time
+    global temp_time
     clear()
     print(bold("This is the home page"))
     print('''
@@ -203,8 +220,9 @@ Press 4 to experience infinite gambling, infinite joy
         flashingText("Jessie ended the call",1,3)
         clear()
         printStepByStep("A month later, you find yourself in a lab with labubus",0.05,1)
+        start_time = time.time()
+        temp_time = time.time()
         startMain()
-
     elif user == 2:
         rules()
     elif user == 3:
@@ -216,6 +234,60 @@ Press 4 to experience infinite gambling, infinite joy
             user = user.lower()
             if user == "quit":
                 home()
+
+def startMain():
+    global temp_time
+    clear()
+    now_time = time.time()
+    Player["money"] = Player["money"] + (now_time - temp_time) * Player["load_efficiency_in_sec"]  
+    temp_time = time.time()
+    Player["time_played"] = now_time - start_time
+    print(bold("The HMT lab"))
+    print(f'''
+You are in level: {Player["level"]}
+Time played in seconds: {f"{Player["time_played"]:.2f}"}
+Your money you have now: ${Player["money"]}
+-------------------------------------------------------------
+This is the menu of the game.
+-------------------------------------------------------------
+Press 0 to quit the game
+Press 1 to roll a labubu
+Press 2 to manage your labubus
+Press 3 to manage your inventory
+Press 4 to buy tools
+Press 5 to buy armor 
+Press 6 to buy weapons
+Press 7 to view your journey
+Press enter to refresh
+        '''
+        )
+    user = input()
+    while type(user) == str:
+        try:
+            user = int(user)
+            if user > 7 or user < 0:
+                user = input("Input invalid, input again:")
+        except ValueError:
+            if user == '':
+                startMain()
+            else:
+                user = input("Input invalid, input again:")
+    if user == 0:
+        exitGame()
+    elif user == 1:
+        buyLabubuCrate()        #check money is enough, quick open, rolling and initiate that labubu shit, prob description?idk i will do this later
+    elif user == 2:
+        manageLabubu()      #view slots left,show some attributes, can select one labubufor detail stats
+    elif user == 3:
+        playerInventory()       #do grouping maybe???
+    elif user == 4:
+        buyToolsPage()      
+    elif user == 5:
+        buyArmorPage()
+    elif user == 6:
+        buyWeaponPage()
+    elif user == 7:
+        journeyMap()        #include boss stats, do it in this style: ----------x----------x---------x--------x------x
 
 def plot():
     clear()
@@ -246,27 +318,36 @@ Press the corresponding keys to buy the tools.
 ---------------------------------------------------------
         '''
         )
+    print("Press anything to go back:")
+    input()
+    startMain()
 
 #main part
 clear()
 print(bold("Welcome to Ho Man Tin simulator"))
 print('''
-This is a game where you can fulfill your fantasy of being Ho Man Tin.
-You can collect labubus, controll them, make them work.
-Must importantly, use the load, buy weapons and conquer the world.
-You won't get much load... Will you?
+This is an RPG game where you can fulfill your fantasy of being Ho Man Tin, as one of the survivors of the global pandemic.
+You discovered labubus which make loads which makes you money.
+You decided to buy armor, tools, weapons to go on a journey to discover the truth of the pandemic.
+You won't get lost... Will you?
         '''
         )
-print("Press anything to continue.")
+print("Press anything to continue:")
 input()
 clear()
 Player["name"] = input("What is your name?")
 while Player["name"] == '':
     Player["name"] = input("Username cannot be empty. What is your name?")
 print("Welcome,",Player["name"]+"!")
-print("Press anything to continue.")
+print("Press anything to continue:")
+clear()
+user = input(f"{Player["name"]}, do you love Ho Man Tin?(hint: say yes)")
+user = user.lower()
+permit = True
+if user != "yes":
+    permit = False
+assert permit == True , "Go kill yourself..."       #no need to use assert but i just learned it so i wanna use
+print("Great! Press anything to continue:")
 input()
 while True:
     home()  
-
-
