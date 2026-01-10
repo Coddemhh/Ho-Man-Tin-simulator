@@ -1,4 +1,4 @@
-#this is the ho man tin sumulation code
+#view source code only in risk of spoiler
 import time 
 import random
 import math
@@ -30,9 +30,52 @@ rarity = {
 
 chances = [1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,4,4,5]
 
+class Items:
+    def __init__(self, name : str, type_of_item : str, __level_required_to_obtain : int, __base_price : int, price : float):
+        self.name = name
+        self.level_required_to_obtain = __level_required_to_obtain
+        self.base_price = __base_price
+        self.type_of_item = type_of_item
+        self.price = price
+
+    def checkAbleToObtain(self,Player : object):
+        if Player.level >= self.level_required_to_obtain:
+            return True
+        return False
+
+    def __str__(self):
+        return ("Name:" + self.name + '\n' + 
+                "Type:" + self.type_of_item + '\n' +
+                "Price" + str(self.price) + '\n') 
+    
+    def __repr__(self):
+        return "<Items Object>\n" + str(self)
+
+    
+class Armor(Items):
+    def __init__(self, name : str, type_of_item : str, __level_required_to_obtain : int, __base_price : int, price : float, defence_stat : int, added_hp : int):
+        super().__init__(name, type_of_item, __level_required_to_obtain, __base_price, price)
+        self.defence_stat = defence_stat
+        self.added_hp = added_hp
+
+    def __str__(self);
+        return (super().__str__() + 
+                "Defence stat" + str(self.defence_stat) + '\n' + 
+                "Added hp:" + str(self.added_hp) + '\n')
+
+class Tools(Items):
+    def __init__(self, name : str, type_of_item : str, __level_required_to_obtain : int, __base_price : int, price : float, effect : str):
+        super().__init__(name, type_of_item, __level_required_to_obtain, __base_price, price)
+        self.effect = effect
+    
+    def 
+
+
+
+
 class Player:
     def __init__(self, name, money, level, Labubu_slot, Labubu_owned, helmet_equiped, chestplate_equiped, pants_equiped, shoes_equiped, sword_equiped,
-                long_range_equiped, attack_stat, defence_stat, load_efficiency_in_sec, lives):
+                long_range_equiped, attack_stat, defence_stat, load_efficiency_in_sec, lives, hp):
         self.name = name
         self.money = money
         self.level = level 
@@ -48,6 +91,14 @@ class Player:
         self.defence_stat = defence_stat
         self.load_efficiency_in_sec = load_efficiency_in_sec
         self.lives = lives
+        self.hp = hp
+    
+    def takeDamage(self, damage_taken : int):
+        self.hp -= damage_taken
+
+    def advanceLevel(self):
+        self.level += 1
+        self.Labubu_slot += 10
 
     def __str__(self):
         return ("Name:" + self.name + '\n' +
@@ -108,7 +159,7 @@ class Labubu:
             else:
                 second_labubu.efficiency += 50
                 print(f"{self.name} has given {second_labubu.name} head!")      #well they cant both give each other head can they?
-            return 1
+            return True
 
     def sexTransfer(self):
         if self.gender == "F":
